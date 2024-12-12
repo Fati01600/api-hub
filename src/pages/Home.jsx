@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import chillRnbImage from '../assets/ChillRnBSoul.jpg';
-import danishHitsImage from '../assets/DanishHitsImage.jpg';
+import danishHitsImage from '../assets/danishHitsImage.jpg';
 import everythingImage from '../assets/everythingImage.jpg';
 const HomeWrapper = styled.div`
   text-align: center;
