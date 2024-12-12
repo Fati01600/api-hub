@@ -38,7 +38,7 @@ function MainLayout() {
           <Outlet />
         </main>
         <Footer>
-          <p>&copy; 2024 MuzzPlayer</p>
+          <p>&copy; 2024 MuzzPlayer</p>  
           <p>API Hub v1.0</p>
         </Footer>
       </Container>

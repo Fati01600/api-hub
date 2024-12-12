@@ -68,7 +68,7 @@ function Home() {
         <p>Create playlists, share music, and discover your musical soulmate today</p>
       </Hero>
       <Section>
-        <h2>Recommended Playlists</h2>
+        <h2>Recent Played Playlists</h2>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
           {playlists.map((playlist, index) => (
             <Card
