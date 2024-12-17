@@ -2,21 +2,59 @@ import { Outlet } from 'react-router';
 import GlobalStyle from '../styles/GlobalStyle';
 import styled from 'styled-components';
 import TopMenu from '../components/TopMenu';
+import LeftMenu from '../components/LeftMenu';
+import background from '../assets/background.mp4';
+import MusicPlayer from '../components/player/MusicPlayer';
+import { useState } from 'react';
 
-const Container = styled.div`
+const LayoutWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 1200px; 
+  min-height: 100vh;
+`;
+
+const MainContent = styled.div`
+  display: flex;
+  flex: 1;
+`;
+
+const Sidebar = styled.div`
+  width: 240px;
+  background: rgba(34, 34, 34, 0.9);
+`;
+
+const ContentArea = styled.div`
+  flex: 1;
+  position: relative;
+  overflow-y: auto;
+`;
+
+const BackgroundVideo = styled.video`
   width: 100%;
-  margin: 0 auto; 
-  border: 1px solid #ccc; 
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  object-fit: cover;
+`;
+
+const OverlayBox = styled.div`
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 1200px;
+  margin: 20px auto;
 `;
 
 const Header = styled.header`
-  background-color: #FF0000;
-  color: white;
-  padding: 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
 `;
 
 const Footer = styled.footer`
@@ -24,24 +62,45 @@ const Footer = styled.footer`
   color: white;
   text-align: center;
   padding: 1rem;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
 `;
 
 function MainLayout() {
+  const [selectedSong, setSelectedSong] = useState(null);
+
   return (
     <>
       <GlobalStyle />
-      <Container>
+      <LayoutWrapper>
+        {/* TopMenu sender valgt sang */}
         <Header>
-          <TopMenu />
+          <TopMenu onSongSelect={setSelectedSong} />
         </Header>
-        <main>
-          <Outlet />
-        </main>
+
+        {/* Main Content */}
+        <MainContent>
+          <Sidebar>
+            <LeftMenu />
+          </Sidebar>
+          <ContentArea>
+            <BackgroundVideo autoPlay loop muted>
+              <source src={background} type="video/mp4" />
+            </BackgroundVideo>
+            <OverlayBox>
+              <Outlet />
+            </OverlayBox>
+          </ContentArea>
+        </MainContent>
+
+        {/* MusicPlayer modtager valgt sang */}
+        <MusicPlayer selectedSong={selectedSong} />
+
+        {/* Footer */}
         <Footer>
-          <p>&copy; 2024 MuzzPlayer</p>  
-          <p>API Hub v1.0</p>
+          <p>&copy; 2024 MuzzPlayer</p>
+          <p>API Hub Fifi</p>
         </Footer>
-      </Container>
+      </LayoutWrapper>
     </>
   );
 }

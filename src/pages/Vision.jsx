@@ -60,6 +60,8 @@ function Vision() {
           With our unique compatibility feature, you can see how much your playlists match with others and even find your musical soulmate. 
           Music is all about connection, and MuzzPlayer is here to bring people together through the songs they love.
         </p>
+        <p>
+        </p>
         <AnimatedText>Music is connection, music is love.</AnimatedText>
       </Content>
     </VisionWrapper>

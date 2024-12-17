@@ -1,54 +1,189 @@
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
+import { FaSearch, FaUserCircle } from 'react-icons/fa';
+import logo from '../assets/logoImage.jpg';
+import { searchSpotify } from '../api/SpotifyApi';
 
 const Header = styled.header`
   margin: 0;
-  padding: 0;
-  background-color: #FF0000;  /* rød*/
-`;
-
-const StyledMenu = styled.ul`
-  background-color: #FF0000;  /* Srød */
+  padding: 10px 20px;
+  background-color: #FF0000;
   display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 20px #FF4500;
 `;
 
+const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const LogoImage = styled.img`
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347;
+`;
+
+const LogoText = styled.div`
+  font-size: 1.8rem;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347;
+`;
+
+const SearchWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
+const SearchInput = styled.input`
+  padding: 5px 10px 5px 30px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  box-shadow: 0 0 10px #FF4500;
+  width: 250px;
+`;
+
+const ResultsDropdown = styled.div`
+  position: absolute;
+  top: 40px;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+`;
+
+const ResultItem = styled.div`
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+`;
+
+const UserWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+const UserIcon = styled(FaUserCircle)`
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  text-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347;
+`;
 
 const StyledLink = styled(NavLink)`
   text-decoration: none;
   color: white;
-  padding: 0.5rem 1rem;
+  background-color: black;
+  font-size: 1rem;
+  padding: 5px 15px;
   border-radius: 5px;
-  background-color: #000; /* Sort */
+  transition: all 0.3s ease-in-out;
 
   &:hover {
-    background-color: #333; /* Lysere sort ved hover */
-    color: #FF0000; /* rød */
+    background-color: #444;
+    color: #FF6347;
   }
 
   &.active {
-    background-color: #444; /* sort knapper */
-    color: #FFFFFF;
+    font-weight: bold;
+    background-color: #333;
+    color: white;
   }
 `;
 
-function TopMenu() {
+function TopMenu({ onSongSelect }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [results, setResults] = useState([]);
+
+  // Håndter søgning
+  const handleSearch = async (e) => {
+    const query = e.target.value;
+    setSearchTerm(query);
+
+    if (query.trim() === '') {
+      setResults([]);
+      return;
+    }
+
+    try {
+      const response = await searchSpotify(query);
+
+      const formattedResults = response.map((track) => ({
+        title: track.name,
+        artist: track.artists[0]?.name || 'Unknown Artist',
+        url: track.preview_url, // Tilføj preview URL
+      }));
+      setResults(formattedResults);
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
+  };
+
   return (
     <Header>
-      <StyledMenu>
-        <li>
-          <StyledLink to="/">Home</StyledLink>
-        </li>
-        <li>
-          <StyledLink to="/vision">Vision</StyledLink>
-        </li>
-        <li>
-          <StyledLink to="/endpoints">Endpoints</StyledLink>
-        </li>
-      </StyledMenu>
+      <LogoWrapper>
+        <LogoImage src={logo} alt="MuzzPlayer Logo" />
+        <LogoText>MuzzPlayer</LogoText>
+      </LogoWrapper>
+      <SearchWrapper>
+        <div style={{ position: 'relative' }}>
+          <FaSearch style={{ position: 'absolute', left: 10, top: 8, color: 'gray' }} />
+          <SearchInput
+            type="text"
+            placeholder="Search for a song..."
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
+        {results.length > 0 && (
+          <ResultsDropdown>
+            {results.map((song, index) => (
+              <ResultItem
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation(); // Stop event propagation
+                  onSongSelect(song);
+                }}
+              >
+                <div>
+                  <strong>{song.title}</strong>
+                  <br />
+                  <small>{song.artist}</small>
+                </div>
+              </ResultItem>
+            ))}
+          </ResultsDropdown>
+        )}
+      </SearchWrapper>
+      <UserWrapper>
+        <UserIcon />
+        <StyledLink to="/login">Login</StyledLink>
+      </UserWrapper>
     </Header>
   );
 }
+
+TopMenu.propTypes = {
+  onSongSelect: PropTypes.func.isRequired, // onSongSelect funktion
+};
 
 export default TopMenu;

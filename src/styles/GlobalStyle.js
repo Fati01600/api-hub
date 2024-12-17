@@ -9,19 +9,19 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: 'Arial', sans-serif;
-    background-color: #121212; /* Mørk baggrund */
-    color: #FFFFFF; /* Hvid tekst */
+    background-color: #121212; 
+    color: #FFFFFF; 
     margin: 0;
     line-height: 1.6;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    color: #FFFFFF; /* Sørg for overskrifter er hvide */
+    color: #FFFFFF; 
   }
 
   a {
     text-decoration: none;
-    color: #1DB954; /* Spotify-grøn */
+    color: #1DB954; 
   }
 
   ul {
@@ -36,7 +36,7 @@ const GlobalStyle = createGlobalStyle`
 
   header, footer {
     width: 100%;
-    background-color: #181818; /* Mørkere header/footer */
+    background-color: #181818; 
     color: #FFFFFF;
   }
 `;
