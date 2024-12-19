@@ -12,7 +12,7 @@ const Sidebar = styled.div`
   color: #FFFFFF;
   display: flex;
   flex-direction: column;
-  padding: 80px 20px 20px; /* Top-padding inkluderet */
+  padding: 80px 20px 20px; 
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 `;
 

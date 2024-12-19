@@ -1,19 +1,20 @@
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
-import { FaSearch, FaUserCircle } from 'react-icons/fa';
-import logo from '../assets/logoImage.jpg';
-import { searchSpotify } from '../api/SpotifyApi';
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { NavLink } from "react-router-dom";
+import { FaSearch, FaUserCircle } from "react-icons/fa";
+import logo from "../assets/logoImage.jpg";
+import { searchSpotify } from "../api/SpotifyApi";
+import { useUser } from "../api/UserContext";
 
 const Header = styled.header`
   margin: 0;
   padding: 10px 20px;
-  background-color: #FF0000;
+  background-color: #ff0000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 0 20px #FF4500;
+  box-shadow: 0 0 20px #ff4500;
 `;
 
 const LogoWrapper = styled.div`
@@ -26,14 +27,14 @@ const LogoImage = styled.img`
   height: 50px;
   width: 50px;
   border-radius: 50%;
-  box-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347;
+  box-shadow: 0 0 10px #ff4500, 0 0 20px #ff6347;
 `;
 
 const LogoText = styled.div`
   font-size: 1.8rem;
   color: white;
   font-weight: bold;
-  text-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347;
+  text-shadow: 0 0 10px #ff4500, 0 0 20px #ff6347;
 `;
 
 const SearchWrapper = styled.div`
@@ -47,7 +48,7 @@ const SearchInput = styled.input`
   border-radius: 5px;
   border: 1px solid #ddd;
   font-size: 0.9rem;
-  box-shadow: 0 0 10px #FF4500;
+  box-shadow: 0 0 10px #ff4500;
   width: 250px;
 `;
 
@@ -80,13 +81,21 @@ const UserWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
+  color: white;
 `;
 
-const UserIcon = styled(FaUserCircle)`
-  font-size: 1.5rem;
+const LogoutButton = styled.button`
+  background: transparent;
   color: white;
+  border: 1px solid white;
+  padding: 5px 10px;
   cursor: pointer;
-  text-shadow: 0 0 10px #FF4500, 0 0 20px #FF6347;
+  border-radius: 5px;
+
+  &:hover {
+    background: #ff4500;
+    color: black;
+  }
 `;
 
 const StyledLink = styled(NavLink)`
@@ -100,7 +109,7 @@ const StyledLink = styled(NavLink)`
 
   &:hover {
     background-color: #444;
-    color: #FF6347;
+    color: #ff6347;
   }
 
   &.active {
@@ -111,30 +120,29 @@ const StyledLink = styled(NavLink)`
 `;
 
 function TopMenu({ onSongSelect }) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
+  const { user, logout } = useUser();
 
-  // Håndter søgning
   const handleSearch = async (e) => {
     const query = e.target.value;
     setSearchTerm(query);
 
-    if (query.trim() === '') {
+    if (query.trim() === "") {
       setResults([]);
       return;
     }
 
     try {
       const response = await searchSpotify(query);
-
       const formattedResults = response.map((track) => ({
         title: track.name,
-        artist: track.artists[0]?.name || 'Unknown Artist',
-        url: track.preview_url, // Tilføj preview URL
+        artist: track.artists[0]?.name || "Unknown Artist",
+        url: track.preview_url,
       }));
       setResults(formattedResults);
     } catch (error) {
-      console.error('Error fetching search results:', error);
+      console.error("Error fetching search results:", error);
     }
   };
 
@@ -144,9 +152,10 @@ function TopMenu({ onSongSelect }) {
         <LogoImage src={logo} alt="MuzzPlayer Logo" />
         <LogoText>MuzzPlayer</LogoText>
       </LogoWrapper>
+
       <SearchWrapper>
-        <div style={{ position: 'relative' }}>
-          <FaSearch style={{ position: 'absolute', left: 10, top: 8, color: 'gray' }} />
+        <div style={{ position: "relative" }}>
+          <FaSearch style={{ position: "absolute", left: 10, top: 8, color: "gray" }} />
           <SearchInput
             type="text"
             placeholder="Search for a song..."
@@ -160,7 +169,7 @@ function TopMenu({ onSongSelect }) {
               <ResultItem
                 key={index}
                 onClick={(e) => {
-                  e.stopPropagation(); // Stop event propagation
+                  e.stopPropagation();
                   onSongSelect(song);
                 }}
               >
@@ -174,16 +183,27 @@ function TopMenu({ onSongSelect }) {
           </ResultsDropdown>
         )}
       </SearchWrapper>
+
       <UserWrapper>
-        <UserIcon />
-        <StyledLink to="/login">Login</StyledLink>
-      </UserWrapper>
+  {user ? (
+    <>
+      <span>
+        <strong>{user.username}</strong>{" "}
+        ({user.roles && user.roles.includes("admin") ? "Admin" : "User"})
+      </span>
+      <LogoutButton onClick={logout}>Logout</LogoutButton>
+    </>
+  ) : (
+    <StyledLink to="/login">Login</StyledLink>
+  )}
+</UserWrapper>
+
     </Header>
   );
 }
 
 TopMenu.propTypes = {
-  onSongSelect: PropTypes.func.isRequired, // onSongSelect funktion
+  onSongSelect: PropTypes.func.isRequired,
 };
 
 export default TopMenu;

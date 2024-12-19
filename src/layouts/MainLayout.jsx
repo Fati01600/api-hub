@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 import GlobalStyle from '../styles/GlobalStyle';
 import styled from 'styled-components';
 import TopMenu from '../components/TopMenu';
@@ -65,8 +65,18 @@ const Footer = styled.footer`
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
 `;
 
+// 404 container
+const PageNotFound = styled.div`
+  margin-top: 120px; 
+  text-align: center;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+`;
+
 function MainLayout() {
   const [selectedSong, setSelectedSong] = useState(null);
+  const location = useLocation();
 
   return (
     <>
@@ -87,7 +97,12 @@ function MainLayout() {
               <source src={background} type="video/mp4" />
             </BackgroundVideo>
             <OverlayBox>
-              <Outlet />
+              {/* 404 Handling */}
+              {location.pathname === '/randompath' ? (
+                <PageNotFound>404 - Page Not Found</PageNotFound>
+              ) : (
+                <Outlet />
+              )}
             </OverlayBox>
           </ContentArea>
         </MainContent>

@@ -90,7 +90,7 @@ function Home() {
       </VideoBackground>
       <ContentWrapper>
         <h1>Welcome to MuzzPlayer</h1>
-        <p>Create playlists, share music, and discover your musical soulmate today</p>
+        <p>Create playlists, share music, and discover your musical soulmate today.</p>
       </ContentWrapper>
 
       <Section>

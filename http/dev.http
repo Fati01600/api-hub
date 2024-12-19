@@ -1,0 +1,41 @@
+@url = http://localhost:7777/api/v1
+@jwt_token = eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJGYXRpbWEiLCJzdWIiOiJKb24iLCJleHAiOjE3MzQ1NjM5MjMsInJvbGVzIjoiYWRtaW4sdXNlciIsInVzZXJuYW1lIjoiSm9uIn0.E9bFbbxKrm6lt5WN3NPgGa0FT5M2LeTKQQVrvp1yPSQ
+
+### GET protected playlists
+GET {{url}}/playlists
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+### POST an login
+
+POST  {{url}}/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username":"Jon",
+  "password": "1234"
+}
+
+### POST an register
+POST {{url}}/auth/register/
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username":"Jon",
+  "password": "1234"
+}
+
+### Add admin role to user
+POST {{url}}/auth/user/addrole/
+Accept: application/json
+Authorization: Bearer {{jwt_token}}
+
+{
+    "role": "admin"
+}
+
+
+
+

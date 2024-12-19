@@ -28,8 +28,8 @@ const ContentWrapper = styled.div`
 const Section = styled.div`
   background: rgba(0, 0, 0, 0.6); 
   border-radius: 10px;
-  padding: 20px;
-  margin: 20px 0;
+  padding: 30px;
+  margin: 100px 0;
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 `;
 
@@ -50,10 +50,6 @@ function Library() {
         <Section>
           <h2>Playlists</h2>
           <p>Explore your saved playlists.</p>
-        </Section>
-        <Section>
-          <h2>Favorites</h2>
-          <p>Check out your favorite songs and artists.</p>
         </Section>
       </ContentWrapper>
     </LibraryWrapper>

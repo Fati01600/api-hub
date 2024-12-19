@@ -1,8 +1,10 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import styled from "styled-components";
+import { login } from "../api/AuthApi"; 
+import { useUser } from "../api/UserContext"; 
+import { useNavigate } from "react-router-dom";
 
-//Login, forgot password, signin er samlet her via useState
+// Styled components
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -60,58 +62,47 @@ const Link = styled.span`
 `;
 
 function Login() {
-  const [view, setView] = useState("login"); // Skifter mellem login, forgot og signin
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { setUser } = useUser();
+  const navigate = useNavigate();
 
-  const renderForm = () => {
-    switch (view) {
-      case "forgot":
-        return (
-          <>
-            <h2 style={{ color: "white" }}>Forgot Password</h2>
-            <Input type="email" placeholder="Enter your email" />
-            <Button>Reset Password</Button>
-            <p style={{ color: "white" }}>
-              Remembered your password?{" "}
-              <Link onClick={() => setView("login")}>Back to Login</Link>
-            </p>
-          </>
-        );
-      case "signup":
-        return (
-          <>
-            <h2 style={{ color: "white" }}>Sign Up</h2>
-            <Input type="text" placeholder="Username" />
-            <Input type="email" placeholder="Email" />
-            <Input type="password" placeholder="Password" />
-            <Button>Sign Up</Button>
-            <p style={{ color: "white" }}>
-              Already have an account?{" "}
-              <Link onClick={() => setView("login")}>Login</Link>
-            </p>
-          </>
-        );
-      default:
-        return (
-          <>
-            <h2 style={{ color: "white" }}>Login</h2>
-            <Input type="text" placeholder="Username or Email" />
-            <Input type="password" placeholder="Password" />
-            <Button>Login</Button>
-            <p>
-              <Link onClick={() => setView("forgot")}>Forgot password?</Link>
-            </p>
-            <p style={{ color: "white" }}>
-              Don’t have an account?{" "}
-              <Link onClick={() => setView("signup")}>Sign in</Link>
-            </p>
-          </>
-        );
+  const handleLogin = async () => {
+    try {
+      const response = await login(username, password); 
+      localStorage.setItem("jwt_token", response.token);
+      localStorage.setItem("user_info", JSON.stringify(response));
+      setUser({ username: response.username, roles: response.roles }); 
+      navigate("/"); 
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Invalid username or password");
     }
   };
 
   return (
     <Wrapper>
-      <Box>{renderForm()}</Box>
+      <Box>
+        <h2 style={{ color: "white" }}>Login</h2>
+        <Input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Button onClick={handleLogin}>Login</Button>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <p>
+          <Link>Forgot password?</Link>
+        </p>
+      </Box>
     </Wrapper>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaPlay, FaPause, FaStepBackward, FaStepForward } from 'react-icons/fa';
 
-// Styled Components
+
 const PlayerWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -53,11 +53,11 @@ const ProgressBar = styled.input`
   }
 `;
 
-function MusicPlayer({ selectedSong }) { // Modtager selectedSong fra MainLayout
+function MusicPlayer({ selectedSong }) { 
   const audioRef = useRef(new Audio());
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0); //  0 som default
+  const [duration, setDuration] = useState(0); 
   const [songs, setSongs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -69,7 +69,7 @@ function MusicPlayer({ selectedSong }) { // Modtager selectedSong fra MainLayout
         artist: selectedSong.artist,
         url: selectedSong.url,
       };
-      setSongs([newSong]); // Sætter kun én sang i playlisten
+      setSongs([newSong]); 
       setCurrentIndex(0);
       audioRef.current.src = newSong.url;
 
@@ -79,7 +79,7 @@ function MusicPlayer({ selectedSong }) { // Modtager selectedSong fra MainLayout
       setProgress(0);
 
       audioRef.current.onloadedmetadata = () => {
-        setDuration(audioRef.current.duration); // Sætter varigheden
+        setDuration(audioRef.current.duration); 
       };
     }
   }, [selectedSong]);
@@ -103,7 +103,7 @@ function MusicPlayer({ selectedSong }) { // Modtager selectedSong fra MainLayout
       setProgress(0);
 
       audioRef.current.onloadedmetadata = () => {
-        setDuration(audioRef.current.duration); // Opdater varigheden ved ny sang
+        setDuration(audioRef.current.duration); 
       };
     }
   }, [currentIndex, songs]);

@@ -8,8 +8,8 @@ const VisionWrapper = styled.div`
   margin: 20px 0;
   border-radius: 10px;
   overflow: hidden; 
-  padding: 20px;¨
-
+  padding: 20px;
+  
 `;
 
 const VideoBackground = styled.video`
@@ -25,7 +25,7 @@ const Content = styled.div`
   position: relative;
   z-index: 1;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.5); /* gennemsigt sorut baggrund */
+  background: rgba(0, 0, 0, 0.5); 
   border-radius: 10px;
 `;
 
