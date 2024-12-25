@@ -189,7 +189,7 @@ function TopMenu({ onSongSelect }) {
     <>
       <span>
         <strong>{user.username}</strong>{" "}
-        ({user.roles && user.roles.includes("admin") ? "Admin" : "User"})
+        ({user.roles && user.roles.includes("ADMIN") ? "Admin" : "User"})
       </span>
       <LogoutButton onClick={logout}>Logout</LogoutButton>
     </>

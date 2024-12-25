@@ -73,6 +73,7 @@ function Login() {
       const response = await login(username, password); 
       localStorage.setItem("jwt_token", response.token);
       localStorage.setItem("user_info", JSON.stringify(response));
+      localStorage.setItem("roles", JSON.stringify(response));
       setUser({ username: response.username, roles: response.roles }); 
       navigate("/"); 
     } catch (err) {

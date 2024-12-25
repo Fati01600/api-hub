@@ -6,36 +6,43 @@ GET {{url}}/playlists
 Accept: application/json
 Authorization: Bearer {{jwt_token}}
 
-### POST an login
-
-POST  {{url}}/auth/login
+### POST login
+POST {{url}}/auth/login
 Content-Type: application/json
 Accept: application/json
 
 {
-  "username":"Jon",
+  "username": "Admin",
   "password": "1234"
 }
 
-### POST an register
-POST {{url}}/auth/register/
+> {%
+    client.global.set("jwt_token", response.body.token);
+    console.log("JWT Token:", client.global.get("jwt_token"));
+%}
+
+### POST register
+POST {{url}}/auth/register
 Content-Type: application/json
 Accept: application/json
 
 {
-  "username":"Jon",
+  "username": "Jon",
   "password": "1234"
 }
 
 ### Add admin role to user
-POST {{url}}/auth/user/addrole/
+POST {{url}}/auth/user/addrole
+Content-Type: application/json
 Accept: application/json
-Authorization: Bearer {{jwt_token}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJGYXRpbWEiLCJzdWIiOiJGYXRpbWEiLCJleHAiOjE3MzQ4MTM2MjQsInJvbGVzIjoiQURNSU4iLCJ1c2VybmFtZSI6IkZhdGltYSJ9.jLXDhlGNHfXktq_9WGeYwAPKFlV43dm1eY6NhlCoVs4
 
 {
-    "role": "admin"
+  "role": "ADMIN"
 }
 
-
-
+### GET secured admin endpoint
+GET {{url}}/protected/admin_demo
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJGYXRpbWEiLCJzdWIiOiJGYXRpbWEiLCJleHAiOjE3MzQ4MTM2MjQsInJvbGVzIjoiQURNSU4iLCJ1c2VybmFtZSI6IkZhdGltYSJ9.jLXDhlGNHfXktq_9WGeYwAPKFlV43dm1eY6NhlCoVs4
 
