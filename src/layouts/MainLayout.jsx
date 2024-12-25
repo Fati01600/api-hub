@@ -6,6 +6,7 @@ import LeftMenu from '../components/LeftMenu';
 import background from '../assets/background.mp4';
 import MusicPlayer from '../components/player/MusicPlayer';
 import { useState } from 'react';
+import { useUser } from '../api/UserContext';
 
 const LayoutWrapper = styled.div`
   display: flex;
@@ -77,25 +78,35 @@ const PageNotFound = styled.div`
 function MainLayout() {
   const [selectedSong, setSelectedSong] = useState(null);
   const location = useLocation();
+  const { user } = useUser();
+
+  // Check if the current user is an Admin and if the route is /admin
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAdmin = user?.roles.includes('ADMIN');
 
   return (
     <>
       <GlobalStyle />
       <LayoutWrapper>
-        {/* TopMenu sender valgt sang */}
+        {/* TopMenu remains visible */}
         <Header>
           <TopMenu onSongSelect={setSelectedSong} />
         </Header>
 
         {/* Main Content */}
         <MainContent>
-          <Sidebar>
-            <LeftMenu />
-          </Sidebar>
+          {!isAdminRoute && !isAdmin ? (
+            <Sidebar>
+              <LeftMenu />
+            </Sidebar>
+          ) : null}
+
           <ContentArea>
+            {/* BackgroundVideo is visible on all pages */}
             <BackgroundVideo autoPlay loop muted>
               <source src={background} type="video/mp4" />
             </BackgroundVideo>
+
             <OverlayBox>
               {/* 404 Handling */}
               {location.pathname === '/randompath' ? (
@@ -107,8 +118,8 @@ function MainLayout() {
           </ContentArea>
         </MainContent>
 
-        {/* MusicPlayer modtager valgt sang */}
-        <MusicPlayer selectedSong={selectedSong} />
+        {/* MusicPlayer only for non-admin routes */}
+        {!isAdminRoute && <MusicPlayer selectedSong={selectedSong} />}
 
         {/* Footer */}
         <Footer>

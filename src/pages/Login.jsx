@@ -70,17 +70,23 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await login(username, password); 
+      const response = await login(username, password);
       localStorage.setItem("jwt_token", response.token);
       localStorage.setItem("user_info", JSON.stringify(response));
-      localStorage.setItem("roles", JSON.stringify(response));
-      setUser({ username: response.username, roles: response.roles }); 
-      navigate("/"); 
+      localStorage.setItem("roles", JSON.stringify(response.roles)); // Gemmer roller
+      setUser({ username: response.username, roles: response.roles });
+  
+      if (response.roles.includes("ADMIN")) {
+        navigate("/admin"); 
+      } else {
+        navigate("/"); 
+      }
     } catch (err) {
       console.error("Login error:", err);
       setError("Invalid username or password");
     }
   };
+  
 
   return (
     <Wrapper>

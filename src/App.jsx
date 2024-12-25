@@ -5,7 +5,8 @@ import Vision from "./pages/Vision";
 import Endpoints from "./pages/Endpoints";
 import Library from "./pages/Library";
 import Login from "./pages/Login";
-import { UserProvider } from './api/UserContext.jsx';
+import Admin from "./pages/Admin"; 
+import { UserProvider } from "./api/UserContext";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="endpoints" element={<Endpoints />} />
             <Route path="library" element={<Library />} />
             <Route path="login" element={<Login />} />
+            <Route path="admin" element={<Admin />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Route>
         </Routes>
@@ -25,4 +27,5 @@ function App() {
     </UserProvider>
   );
 }
+
 export default App;
