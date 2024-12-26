@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { login } from "../api/AuthApi"; 
 import { useUser } from "../api/UserContext"; 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; 
 
-// Styled components
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -53,11 +53,18 @@ const Button = styled.button`
   }
 `;
 
-const Link = styled.span`
-  color: #ff4500;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
+const LinkText = styled.p`
+  color: white;
+  text-align: center;
+  margin-top: 10px;
+
+  a {
+    color: #ff4500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 
@@ -73,7 +80,7 @@ function Login() {
       const response = await login(username, password);
       localStorage.setItem("jwt_token", response.token);
       localStorage.setItem("user_info", JSON.stringify(response));
-      localStorage.setItem("roles", JSON.stringify(response.roles)); // Gemmer roller
+      localStorage.setItem("roles", JSON.stringify(response.roles)); // Save roles
       setUser({ username: response.username, roles: response.roles });
   
       if (response.roles.includes("ADMIN")) {
@@ -86,7 +93,6 @@ function Login() {
       setError("Invalid username or password");
     }
   };
-  
 
   return (
     <Wrapper>
@@ -106,9 +112,9 @@ function Login() {
         />
         <Button onClick={handleLogin}>Login</Button>
         {error && <p style={{ color: "red" }}>{error}</p>}
-        <p>
-          <Link>Forgot password?</Link>
-        </p>
+        <LinkText>
+          Don't have an account? <Link to="/register">Register here</Link>
+        </LinkText>
       </Box>
     </Wrapper>
   );
