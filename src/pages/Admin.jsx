@@ -11,7 +11,7 @@ const AdminWrapper = styled.div`
 `;
 
 const Header = styled.div`
-  background: #252525; 
+  background: #252525;
   padding: 10px 20px;
   display: flex;
   justify-content: space-between;
@@ -64,8 +64,8 @@ const StatCard = styled.div`
 `;
 
 const TableWrapper = styled.div`
-  max-height: 300px; 
-  overflow-y: auto; 
+  max-height: 300px;
+  overflow-y: auto;
 `;
 
 const Table = styled.table`
@@ -76,8 +76,8 @@ const Table = styled.table`
 
 const Th = styled.th`
   padding: 10px;
-  border: 1px solid #383838; 
-  background-color: #383838; 
+  border: 1px solid #383838;
+  background-color: #383838;
   color: white;
   text-align: left;
 `;
@@ -86,6 +86,21 @@ const Td = styled.td`
   padding: 10px;
   border: 1px solid #333;
   color: white;
+`;
+
+const Button = styled.button`
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #ff4500;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  
+  &:hover {
+    background-color: #e03d00;
+  }
 `;
 
 function Admin() {
@@ -118,13 +133,24 @@ function Admin() {
     fetchData();
   }, []);
 
+  const handleDelete = async (endpoint, id, setState) => {
+    try {
+      await axios.delete(`http://localhost:7777/api/v1/${endpoint}/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
+      });
+      setState((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error(`Error deleting ${endpoint}:`, error);
+    }
+  };
+
   return (
     <AdminWrapper>
       <Header>
         <AdminTitle>Hello Admin, Ready to Manage?</AdminTitle>
       </Header>
 
-      {/* Dashboard Stats */}
+      {/* Dashboard */}
       <Section>
         <SectionTitle>Dashboard</SectionTitle>
         <Stats>
@@ -156,12 +182,13 @@ function Admin() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
-                <tr key={index}>
+              {users.map((user) => (
+                <tr key={user.id}>
                   <Td>{user.username}</Td>
                   <Td>{user.roles.join(", ")}</Td>
                   <Td>
-                    <button>Edit</button> <button>Delete</button>
+                    <Button>Edit</Button>
+                    <Button onClick={() => handleDelete("users", user.id, setUsers)}>Delete</Button>
                   </Td>
                 </tr>
               ))}
@@ -184,13 +211,14 @@ function Admin() {
               </tr>
             </thead>
             <tbody>
-              {playlists.map((playlist, index) => (
-                <tr key={index}>
+              {playlists.map((playlist) => (
+                <tr key={playlist.id}>
                   <Td>{playlist.name}</Td>
                   <Td>{playlist.genre}</Td>
                   <Td>{playlist.mood}</Td>
                   <Td>
-                    <button>Edit</button> <button>Delete</button>
+                    <Button>Edit</Button>
+                    <Button onClick={() => handleDelete("playlists", playlist.id, setPlaylists)}>Delete</Button>
                   </Td>
                 </tr>
               ))}
@@ -213,13 +241,14 @@ function Admin() {
               </tr>
             </thead>
             <tbody>
-              {songs.map((song, index) => (
-                <tr key={index}>
+              {songs.map((song) => (
+                <tr key={song.id}>
                   <Td>{song.title}</Td>
                   <Td>{song.artist}</Td>
                   <Td>{song.genre}</Td>
                   <Td>
-                    <button>Edit</button> <button>Delete</button>
+                    <Button>Edit</Button>
+                    <Button onClick={() => handleDelete("songs", song.id, setSongs)}>Delete</Button>
                   </Td>
                 </tr>
               ))}
