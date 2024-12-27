@@ -82,7 +82,7 @@ function MainLayout() {
 
   // Check if the current user is an Admin and if the route is /admin
   const isAdminRoute = location.pathname.startsWith('/admin');
-  const isAdmin = user?.roles.includes('ADMIN');
+  const isAdmin = (user?.roles || []).includes('ADMIN');
 
   return (
     <>

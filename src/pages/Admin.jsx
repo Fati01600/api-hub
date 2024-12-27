@@ -111,17 +111,17 @@ function Admin() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersResponse = await axios.get(process.env.URL + "/users", {
+        const usersResponse = await axios.get(import.meta.env.VITE_URL+ "/users", {
           headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
         });
         setUsers(usersResponse.data);
 
-        const playlistsResponse = await axios.get(process.env.URL + "/playlists", {
+        const playlistsResponse = await axios.get(import.meta.env.VITE_URL + "/playlists", {
           headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
         });
         setPlaylists(playlistsResponse.data);
 
-        const songsResponse = await axios.get(process.env.URL + "/songs", {
+        const songsResponse = await axios.get(import.meta.env.VITE_URL + "/songs", {
           headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
         });
         setSongs(songsResponse.data);
@@ -135,7 +135,7 @@ function Admin() {
 
   const handleDelete = async (endpoint, id, setState) => {
     try {
-      await axios.delete(process.env.URL + `/${endpoint}/${id}`, {
+      await axios.delete(import.meta.env.VITE_URL + `/${endpoint}/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
       });
       setState((prev) => prev.filter((item) => item.id !== id));

@@ -82,7 +82,7 @@ function Register() {
       return;
     }
     try {
-      await axios.post(process.env.URL + "/auth/register", {
+      await axios.post(import.meta.env.VITE_URL + "/auth/register", {
         username,
         password,
       });
