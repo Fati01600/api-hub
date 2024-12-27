@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:7777/api/v1/auth";
+const API_URL = process.env.URL + "/auth";
 
 export const login = async (username, password) => {
   try {

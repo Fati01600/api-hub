@@ -82,7 +82,7 @@ function Register() {
       return;
     }
     try {
-      await axios.post("http://localhost:7777/api/v1/auth/register", {
+      await axios.post(process.env.URL + "/auth/register", {
         username,
         password,
       });
