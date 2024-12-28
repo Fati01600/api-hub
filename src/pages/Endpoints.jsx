@@ -1,19 +1,19 @@
-import styled from 'styled-components';
-import background from '../assets/background.mp4';
+import styled from "styled-components";
+import background from "../assets/background.mp4";
 
+// Styles
 const PageWrapper = styled.div`
   position: relative;
   min-height: 100vh;
   color: #ffffff;
-  font-family: 'Arial', sans-serif;
-  padding-top: 0; 
+  font-family: "Arial", sans-serif;
 `;
 
 const VideoBackground = styled.video`
   width: 100%;
   height: 100%;
   position: absolute;
-  top: -20px; 
+  top: 0;
   left: 0;
   z-index: -1;
   object-fit: cover;
@@ -22,11 +22,11 @@ const VideoBackground = styled.video`
 const ContentWrapper = styled.div`
   position: relative;
   z-index: 1;
-  padding: 20px 20px 50px; 
-  background: rgba(0, 0, 0, 0.6); 
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
   border-radius: 10px;
   max-width: 1200px;
-  margin: 20px auto; 
+  margin: 20px auto;
 `;
 
 const Title = styled.h1`
@@ -40,15 +40,14 @@ const Table = styled.table`
   width: 100%;
   margin: 20px 0;
   border-collapse: collapse;
-  background-color: rgba(26, 26, 46, 0.8); 
-  border-radius: 10px; 
-  overflow: hidden;
+  background-color: rgba(26, 26, 46, 0.8);
+  border-radius: 10px;
 `;
 
 const Th = styled.th`
   border: 1px solid #30475e;
   padding: 15px;
-  background-color: rgba(204, 14, 0, 0.82); 
+  background-color: rgba(204, 14, 0, 0.82);
   color: #ffffff;
   text-align: center;
   font-size: 1.1rem;
@@ -57,7 +56,7 @@ const Th = styled.th`
 const Td = styled.td`
   border: 1px solid #30475e;
   padding: 12px;
-  background-color: rgba(30, 39, 56, 0.8); 
+  background-color: rgba(30, 39, 56, 0.8);
   color: #d3d3d3;
   text-align: center;
   font-size: 1rem;
@@ -92,22 +91,26 @@ const StyledButton = styled.button`
   }
 `;
 
+// Component
 function Endpoints() {
   const endpoints = [
-    { method: 'GET', path: '/users/{id1}/compatibility/{id2}', roles: '[USER]' },
-    { method: 'GET', path: '/playlists', roles: '[USER]' },
-    { method: 'POST', path: '/playlists', roles: '[USER]' },
-    { method: 'PUT', path: '/playlists/{id}', roles: '[USER]' },
-    { method: 'DELETE', path: '/playlists/{id}', roles: '[USER]' },
-    { method: 'GET', path: '/songs', roles: '[ANYONE]' },
-    { method: 'POST', path: '/songs', roles: '[ADMIN]' },
+    { method: "GET", path: "/users/{id1}/compatibility/{id2}", roles: "[USER]" },
+    { method: "GET", path: "/playlists", roles: "[USER]" },
+    { method: "POST", path: "/playlists", roles: "[USER]" },
+    { method: "PUT", path: "/playlists/{id}", roles: "[USER]" },
+    { method: "DELETE", path: "/playlists/{id}", roles: "[USER]" },
+    { method: "GET", path: "/songs", roles: "[ANYONE]" },
+    { method: "POST", path: "/songs", roles: "[ADMIN]" },
   ];
 
   return (
     <PageWrapper>
+      {/* Background video */}
       <VideoBackground autoPlay loop muted>
         <source src={background} type="video/mp4" />
       </VideoBackground>
+
+      {/* Content */}
       <ContentWrapper>
         <Title>API Endpoints</Title>
         <Table>
@@ -119,23 +122,32 @@ function Endpoints() {
             </tr>
           </thead>
           <tbody>
-            {endpoints.map((ep, index) => (
+            {endpoints.map((endpoint, index) => (
               <tr key={index}>
-                <Td>{ep.method}</Td>
-                <Td>{ep.path}</Td>
-                <Td>{ep.roles}</Td>
+                <Td>{endpoint.method}</Td>
+                <Td>{endpoint.path}</Td>
+                <Td>{endpoint.roles}</Td>
               </tr>
             ))}
           </tbody>
         </Table>
+
+        {/* Buttons */}
         <ButtonWrapper>
           <StyledButton
-            onClick={() => window.open('https://muzzplayer.api.showcodefatima.dk/api/v1/routes', '_blank')}
+            onClick={() =>
+              window.open(
+                "https://muzzplayer.api.showcodefatima.dk/api/v1/routes",
+                "_blank"
+              )
+            }
           >
             API
           </StyledButton>
           <StyledButton
-            onClick={() => window.open('https://github.com/Fati01600/MuzzPlayer', '_blank')}
+            onClick={() =>
+              window.open("https://github.com/Fati01600/MuzzPlayer", "_blank")
+            }
           >
             GitHub Repository
           </StyledButton>

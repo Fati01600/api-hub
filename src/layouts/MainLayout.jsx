@@ -1,12 +1,12 @@
-import { Outlet, useLocation } from 'react-router';
-import GlobalStyle from '../styles/GlobalStyle';
-import styled from 'styled-components';
-import TopMenu from '../components/TopMenu';
-import LeftMenu from '../components/LeftMenu';
-import background from '../assets/background.mp4';
-import MusicPlayer from '../components/player/MusicPlayer';
-import { useState } from 'react';
-import { useUser } from '../api/UserContext';
+import { Outlet, useLocation } from "react-router";
+import GlobalStyle from "../styles/GlobalStyle";
+import styled from "styled-components";
+import TopMenu from "../components/TopMenu";
+import LeftMenu from "../components/LeftMenu";
+import background from "../assets/background.mp4";
+import MusicPlayer from "../components/player/MusicPlayer";
+import { useState } from "react";
+import { useUser } from "../api/UserContext";
 
 const LayoutWrapper = styled.div`
   display: flex;
@@ -14,9 +14,10 @@ const LayoutWrapper = styled.div`
   min-height: 100vh;
 `;
 
-const MainContent = styled.div`
+const ContentWrapper = styled.div`
   display: flex;
   flex: 1;
+  position: relative;
 `;
 
 const Sidebar = styled.div`
@@ -24,9 +25,10 @@ const Sidebar = styled.div`
   background: rgba(34, 34, 34, 0.9);
 `;
 
-const ContentArea = styled.div`
+const MainContent = styled.div`
   flex: 1;
   position: relative;
+  padding: 20px;
   overflow-y: auto;
 `;
 
@@ -40,39 +42,29 @@ const BackgroundVideo = styled.video`
   object-fit: cover;
 `;
 
-const OverlayBox = styled.div`
-  position: relative;
-  z-index: 1;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 1200px;
-  margin: 20px auto;
-`;
-
-const Header = styled.header`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-`;
-
 const Footer = styled.footer`
   background-color: #282828;
   color: white;
   text-align: center;
   padding: 1rem;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+  position: sticky;
+  bottom: 0;
+  z-index: 10; 
 `;
 
-// 404 container
-const PageNotFound = styled.div`
-  margin-top: 120px; 
-  text-align: center;
+const ErrorMessage = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 69, 0, 0.9);
   color: white;
-  font-size: 2rem;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 1.5rem;
   font-weight: bold;
+  text-align: center;
+  z-index: 20; 
 `;
 
 function MainLayout() {
@@ -80,52 +72,39 @@ function MainLayout() {
   const location = useLocation();
   const { user } = useUser();
 
-  // Check if the current user is an Admin and if the route is /admin
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  const isAdmin = (user?.roles || []).includes('ADMIN');
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  const isAdmin = (user?.roles || []).includes("ADMIN");
 
   return (
     <>
       <GlobalStyle />
       <LayoutWrapper>
-        {/* TopMenu remains visible */}
-        <Header>
-          <TopMenu onSongSelect={setSelectedSong} />
-        </Header>
+        {/* Top Menu */}
+        <TopMenu onSongSelect={setSelectedSong} />
 
-        {/* Main Content */}
-        <MainContent>
-          {!isAdminRoute && !isAdmin ? (
-            <Sidebar>
-              <LeftMenu />
-            </Sidebar>
-          ) : null}
-
-          <ContentArea>
-            {/* BackgroundVideo is visible on all pages */}
+        {/* Content */}
+        <ContentWrapper>
+          {!isAdminRoute && !isAdmin && <Sidebar><LeftMenu /></Sidebar>}
+          <MainContent>
             <BackgroundVideo autoPlay loop muted>
               <source src={background} type="video/mp4" />
             </BackgroundVideo>
-
-            <OverlayBox>
-              {/* 404 Handling */}
-              {location.pathname === '/randompath' ? (
-                <PageNotFound>404 - Page Not Found</PageNotFound>
-              ) : (
-                <Outlet />
-              )}
-            </OverlayBox>
-          </ContentArea>
-        </MainContent>
-
-        {/* MusicPlayer only for non-admin routes */}
-        {!isAdminRoute && <MusicPlayer selectedSong={selectedSong} />}
+            {location.pathname === "/randompath" ? (
+              <ErrorMessage>404 - Page Not Found</ErrorMessage>
+            ) : (
+              <Outlet />
+            )}
+          </MainContent>
+        </ContentWrapper>
 
         {/* Footer */}
         <Footer>
           <p>&copy; 2024 MuzzPlayer</p>
           <p>API Hub Fifi</p>
         </Footer>
+
+        {/* Music Player */}
+        <MusicPlayer selectedSong={selectedSong} />
       </LayoutWrapper>
     </>
   );

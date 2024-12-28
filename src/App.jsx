@@ -5,7 +5,7 @@ import Vision from "./pages/Vision";
 import Endpoints from "./pages/Endpoints";
 import Library from "./pages/Library";
 import Login from "./pages/Login";
-import Register from "./pages/Register"; // Import Register Page
+import Register from "./pages/Register"; 
 import Admin from "./pages/Admin"; 
 import { UserProvider } from "./api/UserContext";
 
@@ -20,7 +20,7 @@ function App() {
             <Route path="endpoints" element={<Endpoints />} />
             <Route path="library" element={<Library />} />
             <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} /> {/* Register Route */}
+            <Route path="register" element={<Register />} /> 
             <Route path="admin" element={<Admin />} />
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
           </Route>

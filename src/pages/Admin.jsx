@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
+// Styles
 const AdminWrapper = styled.div`
   padding: 20px;
   padding-top: 80px;
@@ -97,33 +98,36 @@ const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
-  
+
   &:hover {
     background-color: #e03d00;
   }
 `;
 
+// Component
 function Admin() {
   const [users, setUsers] = useState([]);
   const [playlists, setPlaylists] = useState([]);
   const [songs, setSongs] = useState([]);
 
+  // Fetch data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersResponse = await axios.get(import.meta.env.VITE_URL+ "/users", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
-        });
+        const [usersResponse, playlistsResponse, songsResponse] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_URL}/users`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
+          }),
+          axios.get(`${import.meta.env.VITE_URL}/playlists`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
+          }),
+          axios.get(`${import.meta.env.VITE_URL}/songs`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
+          }),
+        ]);
+
         setUsers(usersResponse.data);
-
-        const playlistsResponse = await axios.get(import.meta.env.VITE_URL + "/playlists", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
-        });
         setPlaylists(playlistsResponse.data);
-
-        const songsResponse = await axios.get(import.meta.env.VITE_URL + "/songs", {
-          headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
-        });
         setSongs(songsResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -133,9 +137,10 @@ function Admin() {
     fetchData();
   }, []);
 
+  // Handle delete
   const handleDelete = async (endpoint, id, setState) => {
     try {
-      await axios.delete(import.meta.env.VITE_URL + `/${endpoint}/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_URL}/${endpoint}/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("jwt_token")}` },
       });
       setState((prev) => prev.filter((item) => item.id !== id));

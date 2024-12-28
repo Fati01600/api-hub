@@ -1,10 +1,8 @@
-import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
-import { FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import logo from "../assets/logoImage.jpg";
-import { searchSpotify } from "../api/SpotifyApi";
+import { useNavigate, NavLink } from "react-router-dom";
 import { useUser } from "../api/UserContext";
 
 const Header = styled.header`
@@ -15,12 +13,17 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 0 20px #ff4500;
+  position: sticky;
+  top: 0;
+  z-index: 10; 
 `;
+
 
 const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
 `;
 
 const LogoImage = styled.img`
@@ -38,8 +41,6 @@ const LogoText = styled.div`
 `;
 
 const SearchWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   position: relative;
 `;
 
@@ -52,35 +53,10 @@ const SearchInput = styled.input`
   width: 250px;
 `;
 
-const ResultsDropdown = styled.div`
-  position: absolute;
-  top: 40px;
-  background: white;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  z-index: 10;
-  border-radius: 5px;
-  max-height: 200px;
-  overflow-y: auto;
-  width: 100%;
-`;
-
-const ResultItem = styled.div`
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: black;
-
-  &:hover {
-    background: #f0f0f0;
-  }
-`;
-
 const UserWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   color: white;
 `;
 
@@ -119,91 +95,45 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-function TopMenu({ onSongSelect }) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [results, setResults] = useState([]);
-  const { user, logout } = useUser();
+function TopMenu() {
+  const navigate = useNavigate();
+  const { user, setUser } = useUser();
 
-  const handleSearch = async (e) => {
-    const query = e.target.value;
-    setSearchTerm(query);
-
-    if (query.trim() === "") {
-      setResults([]);
-      return;
-    }
-
-    try {
-      const response = await searchSpotify(query);
-      const formattedResults = response.map((track) => ({
-        title: track.name,
-        artist: track.artists[0]?.name || "Unknown Artist",
-        url: track.preview_url,
-      }));
-      setResults(formattedResults);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-    }
+  const handleLogout = () => {
+    localStorage.clear();
+    setUser(null); 
+    navigate("/login"); 
   };
 
   return (
     <Header>
-      <LogoWrapper>
+      {/* Logo that navigates to Home */}
+      <LogoWrapper onClick={() => navigate("/")}>
         <LogoImage src={logo} alt="MuzzPlayer Logo" />
         <LogoText>MuzzPlayer</LogoText>
       </LogoWrapper>
 
+      {/* Search Input */}
       <SearchWrapper>
-        <div style={{ position: "relative" }}>
-          <FaSearch style={{ position: "absolute", left: 10, top: 8, color: "gray" }} />
-          <SearchInput
-            type="text"
-            placeholder="Search for a song..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-        </div>
-        {results.length > 0 && (
-          <ResultsDropdown>
-            {results.map((song, index) => (
-              <ResultItem
-                key={index}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSongSelect(song);
-                }}
-              >
-                <div>
-                  <strong>{song.title}</strong>
-                  <br />
-                  <small>{song.artist}</small>
-                </div>
-              </ResultItem>
-            ))}
-          </ResultsDropdown>
-        )}
+        <FaSearch style={{ position: "absolute", left: 10, top: 8, color: "gray" }} />
+        <SearchInput type="text" placeholder="Search for a song..." />
       </SearchWrapper>
 
+      {/* User Section */}
       <UserWrapper>
-  {user ? (
-    <>
-      <span>
-        <strong>{user.username}</strong>{" "}
-        ({user.roles && user.roles.includes("ADMIN") ? "Admin" : "User"})
-      </span>
-      <LogoutButton onClick={logout}>Logout</LogoutButton>
-    </>
-  ) : (
-    <StyledLink to="/login">Login</StyledLink>
-  )}
-</UserWrapper>
-
+        {user ? (
+          <>
+            <span>
+              <strong>{user.username}</strong>
+            </span>
+            <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+          </>
+        ) : (
+          <StyledLink to="/login">Login</StyledLink>
+        )}
+      </UserWrapper>
     </Header>
   );
 }
-
-TopMenu.propTypes = {
-  onSongSelect: PropTypes.func.isRequired,
-};
 
 export default TopMenu;

@@ -5,7 +5,7 @@ const CLIENT_ID = 'D4f74f18a2cc41ccb94eb5d3c6780a88';
 const CLIENT_SECRET = '1fbbb02c0f20422099a9c4d338e95e24';
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
 
-// Here hantes der access token fra Spotify API
+
 export const getAccessToken = async () => {
   try {
     const authHeader = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);

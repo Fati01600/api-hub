@@ -3,16 +3,22 @@ import styled from "styled-components";
 import axios from "axios";
 import { Link } from "react-router-dom"; 
 
+
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid; 
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5); 
+  background: rgba(0, 0, 0, 0.5);
+  place-items: center; 
 `;
 
 const FormContainer = styled.div`
-  background: rgba(255, 255, 255, 0.1); 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px #ff4500;
@@ -38,14 +44,17 @@ const Input = styled.input`
 const Button = styled.button`
   width: 100%;
   padding: 10px;
-  background: #ff4500;
+  background: linear-gradient(45deg, #ff4500, black);
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  transition: background 0.3s, transform 0.2s;
+
   &:hover {
-    background: #e03d00;
+    background: black;
+    transform: translateY(-3px); 
   }
 `;
 

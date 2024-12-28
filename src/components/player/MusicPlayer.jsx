@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaPlay, FaPause, FaStepBackward, FaStepForward } from 'react-icons/fa';
 
-
+//MusicPlayer
 const PlayerWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -37,27 +37,50 @@ const Controls = styled.div`
   }
 `;
 
-const ProgressBar = styled.input`
+// ProgressBar styles
+const ProgressBarWrapper = styled.div`
   flex: 2;
-  -webkit-appearance: none;
   height: 5px;
   background: #555;
   border-radius: 5px;
-
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 10px;
-    height: 10px;
-    background: #ff4500;
-    border-radius: 50%;
-  }
+  position: relative;
 `;
 
-function MusicPlayer({ selectedSong }) { 
+const ProgressBarFill = styled.div`
+  height: 100%;
+  background: #ff4500;
+  border-radius: 5px;
+  width: ${({ progress, duration }) => (progress / duration) * 100}%;
+`;
+
+// ProgressBar Component
+const ProgressBar = ({ progress, duration, onChange }) => (
+  <ProgressBarWrapper>
+    <ProgressBarFill progress={progress} duration={duration} />
+    <input
+      type="range"
+      min="0"
+      max={duration}
+      value={progress}
+      onChange={(e) => onChange(e.target.value)}
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        opacity: 0,
+        cursor: "pointer",
+      }}
+    />
+  </ProgressBarWrapper>
+);
+
+function MusicPlayer({ selectedSong }) {
   const audioRef = useRef(new Audio());
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0); 
+  const [duration, setDuration] = useState(0);
   const [songs, setSongs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -69,7 +92,7 @@ function MusicPlayer({ selectedSong }) {
         artist: selectedSong.artist,
         url: selectedSong.url,
       };
-      setSongs([newSong]); 
+      setSongs([newSong]);
       setCurrentIndex(0);
       audioRef.current.src = newSong.url;
 
@@ -79,7 +102,7 @@ function MusicPlayer({ selectedSong }) {
       setProgress(0);
 
       audioRef.current.onloadedmetadata = () => {
-        setDuration(audioRef.current.duration); 
+        setDuration(audioRef.current.duration);
       };
     }
   }, [selectedSong]);
@@ -103,7 +126,7 @@ function MusicPlayer({ selectedSong }) {
       setProgress(0);
 
       audioRef.current.onloadedmetadata = () => {
-        setDuration(audioRef.current.duration); 
+        setDuration(audioRef.current.duration);
       };
     }
   }, [currentIndex, songs]);
@@ -117,6 +140,17 @@ function MusicPlayer({ selectedSong }) {
   const playPrevious = () => {
     setCurrentIndex((prev) => (prev - 1 + songs.length) % songs.length);
   };
+
+  // Opdater progress når sangen afspilles
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (audioRef.current?.currentTime) {
+        setProgress(audioRef.current.currentTime);
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <PlayerWrapper>
@@ -134,12 +168,9 @@ function MusicPlayer({ selectedSong }) {
         <FaStepForward onClick={playNext} />
       </Controls>
       <ProgressBar
-        type="range"
-        min="0"
-        max={duration} 
-        value={progress}
-        onChange={(e) => {
-          const newTime = e.target.value;
+        progress={progress}
+        duration={duration}
+        onChange={(newTime) => {
           audioRef.current.currentTime = newTime;
           setProgress(newTime);
         }}
