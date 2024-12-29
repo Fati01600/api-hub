@@ -46,14 +46,15 @@ const Footer = styled.footer`
   background-color: #282828;
   color: white;
   text-align: center;
-  padding: 1rem;
+  padding: 3px 0;
   position: fixed;
   bottom: 0;
-  left: 240px; 
-  width: calc(100% - 240px); 
+  left: 0; 
+  width: 100%; 
   z-index: 10;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
 `;
+
 
 
 

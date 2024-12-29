@@ -6,13 +6,15 @@ import { useNavigate, Link } from "react-router-dom";
 
 
 const Wrapper = styled.div`
-  display: grid; 
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: center;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  place-items: center;
+  padding-top: 50px; 
 `;
+
 
 const Box = styled.div`
   display: flex;
@@ -74,7 +76,7 @@ const LinkText = styled.p`
   }
 `;
 
-// Login Component
+
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -91,7 +93,6 @@ function Login() {
 
       setUser({ username: response.username, roles: response.roles });
 
-      // Redirect based on role
       if (response.roles.includes("ADMIN")) {
         navigate("/admin");
       } else {

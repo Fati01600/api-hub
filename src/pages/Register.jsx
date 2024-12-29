@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 
 
 const Wrapper = styled.div`
-  display: grid; 
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+  align-items: center;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  place-items: center; 
+  padding-top: 50px; 
 `;
 
 const FormContainer = styled.div`

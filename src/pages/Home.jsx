@@ -4,7 +4,7 @@ import chillRnbImage from "../assets/ChillRnBSoul.jpg";
 import danishHitsImage from "../assets/danishHitsImage.jpg";
 import everythingImage from "../assets/everythingImage.jpg";
 
-// Styles
+
 const HomeWrapper = styled.div`
   position: relative;
   text-align: center;

@@ -137,7 +137,7 @@ function Admin() {
     fetchData();
   }, []);
 
-  // Handle delete
+
   const handleDelete = async (endpoint, id, setState) => {
     try {
       await axios.delete(`${import.meta.env.VITE_URL}/${endpoint}/${id}`, {
