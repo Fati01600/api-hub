@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
-// Styles
+
 const AdminWrapper = styled.div`
   padding: 20px;
   padding-top: 80px;
@@ -104,7 +104,7 @@ const Button = styled.button`
   }
 `;
 
-// Component
+
 function Admin() {
   const [users, setUsers] = useState([]);
   const [playlists, setPlaylists] = useState([]);

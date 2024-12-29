@@ -47,10 +47,15 @@ const Footer = styled.footer`
   color: white;
   text-align: center;
   padding: 1rem;
-  position: sticky;
+  position: fixed;
   bottom: 0;
-  z-index: 10; 
+  left: 240px; 
+  width: calc(100% - 240px); 
+  z-index: 10;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
 `;
+
+
 
 const ErrorMessage = styled.div`
   position: fixed;

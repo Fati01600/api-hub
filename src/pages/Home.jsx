@@ -65,7 +65,6 @@ const Card = styled.a`
   }
 `;
 
-// Component
 function Home() {
   const playlists = [
     {
