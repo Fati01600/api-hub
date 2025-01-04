@@ -1,9 +1,16 @@
 import axios from 'axios';
 import queryString from 'query-string';
-
+import SpotifyWebApi from 'spotify-web-api-node';
 const CLIENT_ID = 'D4f74f18a2cc41ccb94eb5d3c6780a88';
 const CLIENT_SECRET = '1fbbb02c0f20422099a9c4d338e95e24';
 const TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
+
+const spotifyApi = new SpotifyWebApi(
+  {
+    clientId: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
+    redirectUri: 'http://www.example.com/callback'
+  });
 
 
 export const getAccessToken = async () => {
@@ -24,6 +31,8 @@ export const getAccessToken = async () => {
     throw error;
   }
 };
+spotifyApi.setAccessToken(await getAccessToken())
+export default spotifyApi
 
 
 export const searchSpotify = async (query) => {

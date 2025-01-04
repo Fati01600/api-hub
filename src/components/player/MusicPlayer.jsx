@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FaPlay, FaPause, FaStepBackward, FaStepForward, FaCompress } from "react-icons/fa";
+import spotifyApi from "../../api/SpotifyApi";
 
 const DraggablePlayer = styled.div`
   position: fixed;
@@ -78,10 +79,18 @@ function MusicPlayer({ selectedSong }) {
   
   useEffect(() => {
     const savedPosition = JSON.parse(localStorage.getItem("musicPlayerPosition"));
+// Get album
+spotifyApi.getAlbum('5XNjyCIHJywcv9dQd1LQM2')
+  .then(function(data) {
+    console.log('Album information', data.body);
+  }, function(err) {
+    console.error(err);
+  });
     if (savedPosition) {
       setPosition(savedPosition);
     }
   }, []);
+
 
   useEffect(() => {
     localStorage.setItem("musicPlayerPosition", JSON.stringify(position));
