@@ -32,8 +32,12 @@ export const getAccessToken = async () => {
   }
 };
 
-spotifyApi.setAccessToken(await getAccessToken());r
-export default spotifyApi;
+async function initializeSpotifyApi() {
+  const token = await getAccessToken();
+  spotifyApi.setAccessToken(token);
+}
+
+initializeSpotifyApi();
 
 //get album
 export const getAlbum = async (albumId) => {
