@@ -1,6 +1,7 @@
-import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
-import { FaHome, FaMusic, FaHeart, FaBroadcastTower, FaUsers, FaEye, FaCode } from 'react-icons/fa';
+import styled from "styled-components";
+import { NavLink } from "react-router-dom";
+import { FaHome, FaMusic, FaHeart, FaBroadcastTower, FaUsers, FaEye, FaCode, FaBalanceScale } from "react-icons/fa";
+import { useUser } from "../api/UserContext";
 
 const Sidebar = styled.div`
   width: 240px;
@@ -9,10 +10,10 @@ const Sidebar = styled.div`
   top: 0;
   left: 0;
   background: rgba(34, 34, 34, 0.9);
-  color: #FFFFFF;
+  color: #ffffff;
   display: flex;
   flex-direction: column;
-  padding: 80px 20px 20px; 
+  padding: 80px 20px 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
 `;
 
@@ -21,7 +22,7 @@ const MenuItem = styled(NavLink)`
   align-items: center;
   gap: 10px;
   padding: 10px 15px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 1.2rem;
   text-decoration: none;
   border-radius: 5px;
@@ -42,24 +43,31 @@ const MenuIcon = styled.div`
 `;
 
 const menuItems = [
-  { to: '/', label: 'Home', icon: <FaHome /> },
-  { to: '/library', label: 'Library', icon: <FaMusic /> },
-  { to: '/discover', label: 'Discover', icon: <FaBroadcastTower /> },
-  { to: '/favorites', label: 'Favorites', icon: <FaHeart /> },
-  { to: '/artists', label: 'Artists', icon: <FaUsers /> },
-  { to: '/vision', label: 'Vision', icon: <FaEye /> },
-  { to: '/endpoints', label: 'Endpoints', icon: <FaCode /> },
+  { to: "/", label: "Home", icon: <FaHome />, protected: false },
+  { to: "/library", label: "Library", icon: <FaMusic />, protected: true },
+  { to: "/songs", label: "Songs", icon: <FaMusic />, protected: true },
+  { to: "/compatibility", label: "Compatibility", icon: <FaBalanceScale />, protected: true }, // Beskyttet nu
+  { to: "/discover", label: "Discover", icon: <FaBroadcastTower />, protected: true },
+  { to: "/favorites", label: "Favorites", icon: <FaHeart />, protected: true },
+  { to: "/artists", label: "Artists", icon: <FaUsers />, protected: true },
+  { to: "/vision", label: "Vision", icon: <FaEye />, protected: false },
+  { to: "/endpoints", label: "Endpoints", icon: <FaCode />, protected: false },
 ];
 
 function LeftMenu() {
+  const { user } = useUser();
+
   return (
     <Sidebar>
-      {menuItems.map(({ to, label, icon }) => (
-        <MenuItem key={to} to={to}>
-          <MenuIcon>{icon}</MenuIcon>
-          {label}
-        </MenuItem>
-      ))}
+      {menuItems.map(({ to, label, icon, protected: isProtected }) => {
+        if (isProtected && !user) return null; 
+        return (
+          <MenuItem key={to} to={to}>
+            <MenuIcon>{icon}</MenuIcon>
+            {label}
+          </MenuItem>
+        );
+      })}
     </Sidebar>
   );
 }

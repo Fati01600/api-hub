@@ -4,7 +4,6 @@ import chillRnbImage from "../assets/ChillRnBSoul.jpg";
 import danishHitsImage from "../assets/danishHitsImage.jpg";
 import everythingImage from "../assets/everythingImage.jpg";
 
-
 const HomeWrapper = styled.div`
   position: relative;
   text-align: center;
@@ -42,6 +41,19 @@ const Section = styled.div`
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
 `;
 
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px; 
+  justify-content: center; 
+  align-items: center; 
+  padding: 10px;
+  margin-left: auto; 
+  margin-right: auto;
+  max-width: 800px; 
+`;
+
+
 const Card = styled.a`
   background-image: url(${(props) => props.image});
   background-size: cover;
@@ -49,14 +61,14 @@ const Card = styled.a`
   background-repeat: no-repeat;
   width: 150px;
   height: 150px;
-  display: inline-block;
-  margin: 10px;
   text-decoration: none;
   color: #ffffff;
   border-radius: 10px;
-  text-align: center;
-  padding-top: 120px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   font-weight: bold;
+  padding-bottom: 10px;
   transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
@@ -84,34 +96,43 @@ function Home() {
     },
   ];
 
+  const handleCardClick = (playlistName) => {
+    console.log(`Playlist clicked: ${playlistName}`);
+  };
+
   return (
     <HomeWrapper>
-      {/* Background Video */}
+      
       <VideoBackground autoPlay loop muted>
         <source src={background} type="video/mp4" />
       </VideoBackground>
 
-      {/* Content Section */}
+   
       <ContentWrapper>
         <h1>Welcome to MuzzPlayer</h1>
         <p>Create playlists, share music, and discover your musical soulmate today.</p>
       </ContentWrapper>
 
-      {/* Playlists Section */}
+    
       <Section>
         <h2>Recent Played Playlists</h2>
-        <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
-          {playlists.map((playlist, index) => (
-            <Card
-              key={index}
-              href={playlist.link}
-              target="_blank"
-              image={playlist.image}
-            >
-              {playlist.name}
-            </Card>
-          ))}
-        </div>
+        {playlists.length > 0 ? (
+          <GridContainer>
+            {playlists.map((playlist, index) => (
+              <Card
+                key={index}
+                href={playlist.link}
+                target="_blank"
+                image={playlist.image}
+                onClick={() => handleCardClick(playlist.name)}
+              >
+                {playlist.name}
+              </Card>
+            ))}
+          </GridContainer>
+        ) : (
+          <p>No playlists available</p> 
+        )}
       </Section>
     </HomeWrapper>
   );

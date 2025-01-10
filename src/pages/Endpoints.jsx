@@ -91,7 +91,7 @@ const StyledButton = styled.button`
   }
 `;
 
-// Component
+
 function Endpoints() {
   const endpoints = [
     { method: "GET", path: "/users/{id1}/compatibility/{id2}", roles: "[USER]" },
@@ -105,12 +105,12 @@ function Endpoints() {
 
   return (
     <PageWrapper>
-      {/* Background video */}
+  
       <VideoBackground autoPlay loop muted>
         <source src={background} type="video/mp4" />
       </VideoBackground>
 
-      {/* Content */}
+      
       <ContentWrapper>
         <Title>API Endpoints</Title>
         <Table>
@@ -132,7 +132,7 @@ function Endpoints() {
           </tbody>
         </Table>
 
-        {/* Buttons */}
+     
         <ButtonWrapper>
           <StyledButton
             onClick={() =>

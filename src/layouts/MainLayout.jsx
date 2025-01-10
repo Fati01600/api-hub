@@ -85,10 +85,10 @@ function MainLayout() {
     <>
       <GlobalStyle />
       <LayoutWrapper>
-        {/* Top Menu */}
+        
         <TopMenu onSongSelect={setSelectedSong} />
 
-        {/* Content */}
+       
         <ContentWrapper>
           {!isAdminRoute && !isAdmin && <Sidebar><LeftMenu /></Sidebar>}
           <MainContent>
@@ -103,13 +103,13 @@ function MainLayout() {
           </MainContent>
         </ContentWrapper>
 
-        {/* Footer */}
+        
         <Footer>
           <p>&copy; 2024 MuzzPlayer</p>
           <p>API Hub Fifi</p>
         </Footer>
 
-        {/* Music Player */}
+        
         <MusicPlayer selectedSong={selectedSong} />
       </LayoutWrapper>
     </>

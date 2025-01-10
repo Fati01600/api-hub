@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FaPlay, FaPause, FaStepBackward, FaStepForward, FaCompress } from "react-icons/fa";
-import spotifyApi from "../../api/SpotifyApi";
+import { getAlbum, addToQueue, getAudioFeaturesForTrack, getNewReleases,} from "../../api/SpotifyApi";
 
 const DraggablePlayer = styled.div`
   position: fixed;
@@ -29,7 +29,6 @@ const SongInfo = styled.div`
     font-size: 1rem;
     color: #ff4500;
   }
-
   p {
     margin: 0;
     font-size: 0.85rem;
@@ -71,53 +70,92 @@ const ProgressBar = styled.input`
 function MusicPlayer({ selectedSong }) {
   const audioRef = useRef(new Audio());
   const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0); 
+  const [progress, setProgress] = useState(0);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [position, setPosition] = useState({ left: 20, bottom: 20 });
   const playerRef = useRef(null);
 
-  
+  const fetchAlbumInfo = async () => {
+    try {
+      if (selectedSong?.albumId) {
+        const album = await getAlbum(selectedSong.albumId);
+        console.log("Album information:", album);
+      } else {
+        console.warn("No album ID provided for fetching album info.");
+      }
+    } catch (error) {
+      console.error("Error fetching album info:", error);
+    }
+  };
+
+  const handleAddToQueue = async () => {
+    try {
+      if (selectedSong?.uri) {
+        await addToQueue(selectedSong.uri);
+        console.log("Added to Spotify playback queue");
+      } else {
+        console.warn("No Spotify URI available to add to queue.");
+      }
+    } catch (error) {
+      console.error("Error adding to queue:", error);
+    }
+  };
+
+  const fetchAudioFeatures = async () => {
+    try {
+      if (selectedSong?.id) {
+        const features = await getAudioFeaturesForTrack(selectedSong.id);
+        console.log("Audio features:", features);
+      } else {
+        console.warn("No track ID provided for fetching audio features.");
+      }
+    } catch (error) {
+      console.error("Error fetching audio features:", error);
+    }
+  };
+
   useEffect(() => {
     const savedPosition = JSON.parse(localStorage.getItem("musicPlayerPosition"));
-// Get album
-spotifyApi.getAlbum('5XNjyCIHJywcv9dQd1LQM2')
-  .then(function(data) {
-    console.log('Album information', data.body);
-  }, function(err) {
-    console.error(err);
-  });
     if (savedPosition) {
       setPosition(savedPosition);
     }
   }, []);
 
-
   useEffect(() => {
     localStorage.setItem("musicPlayerPosition", JSON.stringify(position));
   }, [position]);
 
-  
   useEffect(() => {
     if (selectedSong) {
-      audioRef.current.src = selectedSong.url;
-      setProgress(0); 
-      audioRef.current.play();
-      setIsPlaying(true);
+      console.log("Selected Song Details:", selectedSong);
 
-      
-      audioRef.current.ontimeupdate = () => {
-        setProgress(audioRef.current.currentTime);
-      };
+      const url = selectedSong.preview_url || selectedSong.url;
+      if (url) {
+        audioRef.current.src = url;
+        audioRef.current
+          .play()
+          .then(() => console.log("Playback started successfully"))
+          .catch((err) => console.error("Audio play error:", err));
+        setIsPlaying(true);
 
-      
-      audioRef.current.onended = () => {
-        setProgress(0);
-        setIsPlaying(false);
-      };
+        fetchAlbumInfo();
+        handleAddToQueue();
+        fetchAudioFeatures();
+
+        audioRef.current.ontimeupdate = () => {
+          setProgress(audioRef.current.currentTime);
+        };
+
+        audioRef.current.onended = () => {
+          setProgress(0);
+          setIsPlaying(false);
+        };
+      } else {
+        console.warn("No valid audio URL available for playback.");
+      }
     }
   }, [selectedSong]);
 
-  
   const handleMouseDown = (e) => {
     e.preventDefault();
     const player = playerRef.current;
